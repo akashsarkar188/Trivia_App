@@ -123,6 +123,8 @@ public class QuizView extends AppCompatActivity {
 
     private void populateQuestions() {
 
+        // populating hardcoded data, which can be easily replaced by API
+        // Also the quiz is dynamic so you can input any number of questions
         questionList.add(new QuizQuestionModel(1, "Who is the best cricketer in the world?", "radio", new ArrayList<String>() {{
             add("Sachin Tendulkar");
             add("Virat Kohli");
@@ -138,6 +140,9 @@ public class QuizView extends AppCompatActivity {
     }
 
     private void showQuestions() {
+        // this method will handle the visibility of question and the type of options it should have
+        // either radio or checkbox
+        // I am using dynamic layout to populate the options
         quizLayout.setVisibility(View.VISIBLE);
         summaryScrollView.setVisibility(View.GONE);
 
@@ -164,6 +169,7 @@ public class QuizView extends AppCompatActivity {
         radioGroup.setOrientation(LinearLayout.VERTICAL);
 
         for (String data : options) {
+            // dynamic layout
             RadioButton radioButton = new RadioButton(QuizView.this);
             radioButton.setText(data);
             radioButton.setTextSize(16f);
@@ -173,7 +179,6 @@ public class QuizView extends AppCompatActivity {
                     if (isChecked) {
                         responses.put(questionID_c, buttonView.getText().toString());
                     }
-                    Log.e("XXX", "onCheckedChanged: " + responses.toString());
                 }
             });
             radioGroup.addView(radioButton);
@@ -186,6 +191,7 @@ public class QuizView extends AppCompatActivity {
         optionsLayout.removeAllViews();
 
         for (String data : options) {
+            // dynamic layout
             CheckBox checkBox = new CheckBox(QuizView.this);
             checkBox.setText(data);
             checkBox.setTextSize(16f);
@@ -211,7 +217,6 @@ public class QuizView extends AppCompatActivity {
                     }
                     response_c = checkedItems.toString().replace("[", "").replace("]", "");
                     responses.put(questionID_c, response_c);
-                    Log.e("XXX", "onCheckedChanged: " + responses.toString());
                 }
             });
             optionsLayout.addView(checkBox);
@@ -223,6 +228,9 @@ public class QuizView extends AppCompatActivity {
             summaryDataLayout.removeAllViews();
             summaryGreetingsTextView.setText(String.format("Hello %s, Here are the answers selected :", username_c));
 
+            // all the json operations are responsible for creating a json structure which will
+            // be used to show the history data in dashboard
+            // sample -  [{username:"Akash", date:"2021-04-22 5:56 am", data: [{question:"", answer:""}, {question:"", answer:""}]}]
             String previousResponse = sharedPrefHelper.getHistory();
             JSONArray previousObject;
 

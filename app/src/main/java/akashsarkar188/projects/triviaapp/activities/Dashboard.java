@@ -53,9 +53,12 @@ public class Dashboard extends AppCompatActivity {
         sharedPrefHelper = new SharedPrefHelper(Dashboard.this);
 
         try {
+            // Data is stored in JSON format in local storage, so that API integration can be done
+            // easily.
             String data = sharedPrefHelper.getHistory();
             JSONArray parent;
 
+            // if there is no data, initialize empty array else populate json array
             if (!data.isEmpty())
                 parent = new JSONArray(data);
             else
@@ -63,6 +66,7 @@ public class Dashboard extends AppCompatActivity {
 
             if (parent.length() > 0) {
                 for (int i = 0; i < parent.length(); i++) {
+                    // using serialized classes for model class
                     list.add(new Gson().fromJson(parent.getJSONObject(i).toString(), HistoryListModel.class));
                 }
             }
@@ -70,6 +74,7 @@ public class Dashboard extends AppCompatActivity {
             e.printStackTrace();
         }
 
+        // initialize recycler view
         historyRecyclerView.setLayoutManager(new LinearLayoutManager(Dashboard.this, RecyclerView.VERTICAL, false));
         historyRecyclerView.setHasFixedSize(true);
         adapter = new HistoryAdapter(list, Dashboard.this);
@@ -81,6 +86,7 @@ public class Dashboard extends AppCompatActivity {
         startQuizButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // check if user has typed his name
                 if (nameEditText.getText() != null && !nameEditText.getText().toString().isEmpty()) {
                     startActivity(new Intent(Dashboard.this, QuizView.class)
                             .putExtra("username", nameEditText.getText().toString()));
@@ -94,6 +100,7 @@ public class Dashboard extends AppCompatActivity {
 
     @Override
     protected void onResume() {
+        // refresh when user completes a quiz session
         refreshHistory();
         super.onResume();
     }
